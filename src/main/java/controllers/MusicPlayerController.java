@@ -386,7 +386,6 @@ public class MusicPlayerController extends PlaybackListener implements ActionLis
 
                 // toggle on pause button and toggle off play button
                 musicPlayerView.enablePauseButtonDisablePlayButton();
-                System.out.println("Hello from " + e.getActionCommand());
             }
         } else if (e.getActionCommand().equals("Load Playlist")) {
             JFileChooser jFileChooser = new JFileChooser();
@@ -417,8 +416,8 @@ public class MusicPlayerController extends PlaybackListener implements ActionLis
                 System.out.println("Hello from Next");
                 this.nextSong();
             } else if (musicPlayerView.getButtonLocation(sourceButton).x == 159) {
-                System.out.println("Hello from Play/Pause");
-                musicPlayerView.playButton.addActionListener(play -> {
+                musicPlayerView.getPlayButton().addActionListener(play -> {
+                    System.out.println("Hello from Play");
                     // toggle off play button and toggle on pause button
                     musicPlayerView.enablePauseButtonDisablePlayButton();
 
@@ -426,7 +425,8 @@ public class MusicPlayerController extends PlaybackListener implements ActionLis
                     playCurrentSong();
                 });
 
-                musicPlayerView.pauseButton.addActionListener(pause -> {
+                musicPlayerView.getPauseButton().addActionListener(pause -> {
+                    System.out.println("Hello from Pause");
                     // toggle on play button and toggle off pause button
                     musicPlayerView.enablePlayButtonDisablePauseButton();
 

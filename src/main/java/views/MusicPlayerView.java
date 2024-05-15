@@ -26,18 +26,18 @@ public class MusicPlayerView extends JFrame {
     private JLabel songTitle, songArtist;
     private JPanel playbackBtns;
     private JSlider playbackSlider;
-    JLabel songImage;
-    JToolBar toolBar;
-    JMenuBar menuBar;
-    JMenu songMenu;
-    JMenuItem createPlaylist;
-    JMenuItem loadPlaylist;
-    JMenuItem loadSong;
-    JMenu playlistMenu;
-    File selectedFile;
+    private JLabel songImage;
+    private JToolBar toolBar;
+    private JMenuBar menuBar;
+    private JMenu songMenu;
+    private JMenuItem createPlaylist;
+    private JMenuItem loadPlaylist;
+    private JMenuItem loadSong;
+    private JMenu playlistMenu;
+    private File selectedFile;
     // 5 icon
-    ImageIcon prevButtonIcon, playButtonIcon, pauseButtonIcon, nextButtonIcon;
-    public JButton prevButton, playButton, pauseButton, nextButton;
+    private ImageIcon prevButtonIcon, playButtonIcon, pauseButtonIcon, nextButtonIcon;
+    private JButton prevButton, playButton, pauseButton, nextButton;
 
     public MusicPlayerView(){
         // calls JFrame constructor to configure out gui and set the title heaader to "Music Player"
@@ -75,64 +75,28 @@ public class MusicPlayerView extends JFrame {
         addGuiComponents();
     }
 
+    private void initIcon(){
+        prevButtonIcon = loadImage(ResourcesPath.PREVIOUS_BUTTON);
+        playButtonIcon = loadImage(ResourcesPath.PLAY_BUTTON);
+        pauseButtonIcon = loadImage(ResourcesPath.PAUSE_BUTTON);
+        nextButtonIcon = loadImage(ResourcesPath.NEXT_BUTTON);
+    }
+
     private void addGuiComponents(){
         // add toolbar
         addToolbar();
 
         // load record image
-        songImage = new JLabel(loadImage(ResourcesPath.SONG_IMAGE));
-        songImage.setBounds(0, 50, getWidth() - 20, 225);
-        add(songImage);
+        addRecordImage();
 
         // song title
-        songTitle = new JLabel("Song Title");
-        songTitle.setBounds(0, 285, getWidth() - 10, 30);
-        songTitle.setFont(new Font("Dialog", Font.BOLD, 24));
-        songTitle.setForeground(UIColor.TEXT_COLOR);
-        songTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        add(songTitle);
+        addSongTitle();
 
         // song artist
-        songArtist = new JLabel("Artist");
-        songArtist.setBounds(0, 315, getWidth() - 10, 30);
-        songArtist.setFont(new Font("Dialog", Font.PLAIN, 24));
-        songArtist.setForeground(UIColor.TEXT_COLOR);
-        songArtist.setHorizontalAlignment(SwingConstants.CENTER);
-        add(songArtist);
+        addSongArtist();
 
         // playback slider
-        playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
-        playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 40);
-        playbackSlider.setBackground(null);
-        playbackSlider.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                // when the user is holding the tick we want to the pause the song
-                musicPlayerController.pauseSong();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // when the user drops the tick
-                JSlider source = (JSlider) e.getSource();
-
-                // get the frame value from where the user wants to playback to
-                int frame = source.getValue();
-
-                // update the current frame in the music player to this frame
-                musicPlayerController.setCurrentFrame(frame);
-
-                // update current time in milli as well
-                musicPlayerController.setCurrentTimeInMilli((int) (frame / (2.08 * musicPlayerController.getCurrentSong().getFrameRatePerMilliseconds())));
-
-                // resume the song
-                musicPlayerController.playCurrentSong();
-
-                // toggle on pause button and toggle off play button
-                enablePauseButtonDisablePlayButton();
-            }
-        });
-        add(playbackSlider);
+        addPlaybackSlider();
 
         // playback buttons (i.e. previous, play, next)
         addPlaybackBtns();
@@ -174,23 +138,63 @@ public class MusicPlayerView extends JFrame {
         add(toolBar);
     }
 
-    public JFileChooser getjFileChooser() {
-        return jFileChooser;
+    private void addRecordImage(){
+        songImage = new JLabel(loadImage(ResourcesPath.SONG_IMAGE));
+        songImage.setBounds(0, 50, getWidth() - 20, 225);
+        add(songImage);
     }
 
-    public File getSelectedFile() {
-        return selectedFile;
+    private void addSongTitle(){
+        songTitle = new JLabel("Song Title");
+        songTitle.setBounds(0, 285, getWidth() - 10, 30);
+        songTitle.setFont(new Font("Dialog", Font.BOLD, 24));
+        songTitle.setForeground(UIColor.TEXT_COLOR);
+        songTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        add(songTitle);
     }
 
-    public void setSelectedFile(File selectedFile) {
-        this.selectedFile = selectedFile;
+    private void addSongArtist(){
+        songArtist = new JLabel("Artist");
+        songArtist.setBounds(0, 315, getWidth() - 10, 30);
+        songArtist.setFont(new Font("Dialog", Font.PLAIN, 24));
+        songArtist.setForeground(UIColor.TEXT_COLOR);
+        songArtist.setHorizontalAlignment(SwingConstants.CENTER);
+        add(songArtist);
     }
 
-    private void initIcon(){
-        prevButtonIcon = loadImage(ResourcesPath.PREVIOUS_BUTTON);
-        playButtonIcon = loadImage(ResourcesPath.PLAY_BUTTON);
-        pauseButtonIcon = loadImage(ResourcesPath.PAUSE_BUTTON);
-        nextButtonIcon = loadImage(ResourcesPath.NEXT_BUTTON);
+    private void addPlaybackSlider(){
+        playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+        playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 40);
+        playbackSlider.setBackground(null);
+        playbackSlider.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // when the user is holding the tick we want to the pause the song
+                musicPlayerController.pauseSong();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // when the user drops the tick
+                JSlider source = (JSlider) e.getSource();
+
+                // get the frame value from where the user wants to playback to
+                int frame = source.getValue();
+
+                // update the current frame in the music player to this frame
+                musicPlayerController.setCurrentFrame(frame);
+
+                // update current time in milli as well
+                musicPlayerController.setCurrentTimeInMilli((int) (frame / (2.08 * musicPlayerController.getCurrentSong().getFrameRatePerMilliseconds())));
+
+                // resume the song
+                musicPlayerController.playCurrentSong();
+
+                // toggle on pause button and toggle off play button
+                enablePauseButtonDisablePlayButton();
+            }
+        });
+        add(playbackSlider);
     }
 
     private void addPlaybackBtns(){
@@ -232,6 +236,22 @@ public class MusicPlayerView extends JFrame {
         playbackBtns.add(nextButton);
 
         add(playbackBtns);
+    }
+
+    // Utility methods
+    public JFileChooser getjFileChooser() {
+        return jFileChooser;
+    }
+    public JButton getPlayButton() {
+        return playButton;
+    }
+
+    public JButton getPauseButton() {
+        return pauseButton;
+    }
+
+    public void setSelectedFile(File selectedFile) {
+        this.selectedFile = selectedFile;
     }
 
     public Point getButtonLocation(JButton button){

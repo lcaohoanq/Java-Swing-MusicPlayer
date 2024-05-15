@@ -38,3 +38,6 @@
 <p align="center">
   <img src="https://github.com/curadProgrammer/Java-Swing-MusicPlayer/blob/main/Screenshot_38.png" alt="Music Player App Screenshot">
 </p>
+
+<h2> Build </h2>
+Build to jar file: mvn package
